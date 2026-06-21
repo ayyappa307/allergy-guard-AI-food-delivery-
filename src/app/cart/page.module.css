@@ -1,0 +1,428 @@
+.main {
+  padding: 3rem 1.5rem;
+}
+
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  gap: 1.5rem;
+  color: var(--muted);
+  font-size: 1.25rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cartItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.price {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--muted-bg);
+  padding: 0.5rem;
+  border-radius: 99px;
+}
+
+.quantity button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.removeBtn {
+  color: var(--danger);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.removeBtn:hover {
+  opacity: 1;
+}
+
+.allergyCheck {
+  margin-top: 1rem;
+  background: var(--primary-light);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.allergyHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.summary {
+  padding: 2rem;
+  border-radius: 24px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-top: 1px solid var(--card-border);
+  padding-top: 1.5rem;
+}
+
+.primaryBtn, .checkoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 99px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+/* Address Selector */
+.sectionBlock {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addressGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.addressCard {
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.addressCard:hover {
+  border-color: var(--primary-light);
+}
+
+.addressCardActive {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.addressType {
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addressDetail {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* Delivery Instructions */
+.instructionsInput {
+  width: 100%;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.instructionsInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Suggestions */
+.suggestionsGrid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.suggestionsGrid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.suggestionsGrid::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 10px;
+}
+
+.suggestCard {
+  min-width: 200px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestImg {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.suggestInfo {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.suggestName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestAddBtn {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-top: auto;
+  transition: all 0.2s ease;
+}
+
+.suggestAddBtn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Promo and Tip Sections */
+.promoSection {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1.5rem;
+}
+
+.promoInput {
+  flex: 1;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.promoBtn {
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.promoBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tipSection {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1.5rem;
+}
+
+.tipSectionTitle {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.tipPills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tipPill {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 99px;
+  background: var(--background);
+  color: var(--foreground);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tipPill:hover {
+  border-color: var(--primary);
+}
+
+.tipPillActive {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.primaryBtn:hover, .checkoutBtn:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.6);
+}
+
+.checkoutBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Success Card */
+.successCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.trackingBar {
+  width: 100%;
+  height: 8px;
+  background: var(--muted-bg);
+  border-radius: 4px;
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 33%;
+  background: var(--primary);
+  border-radius: 4px;
+  animation: loadProgress 2s ease-out forwards;
+}
+
+.statusLabels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.activeStatus {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 2fr 1fr;
+  }
+}

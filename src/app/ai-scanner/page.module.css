@@ -1,0 +1,169 @@
+.main {
+  padding: 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.searchBox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 99px;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.searchBox:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.15);
+}
+
+.searchBox input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--foreground);
+  padding: 0.75rem 1rem;
+  font-size: 1.125rem;
+  outline: none;
+}
+
+.searchBox button {
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.searchBox button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.searchBox button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.suggestions button {
+  background: var(--muted-bg);
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  color: var(--foreground);
+  transition: background 0.2s;
+}
+
+.suggestions button:hover {
+  background: var(--card-border);
+}
+
+.resultsArea {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 16px;
+  gap: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.emoji {
+  background: var(--muted-bg);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.realImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card h4 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.card p {
+  color: var(--muted);
+}
+
+.viewBtn {
+  margin-left: auto;
+  background: var(--foreground);
+  color: var(--background);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.viewBtn:hover {
+  transform: scale(1.1);
+}
