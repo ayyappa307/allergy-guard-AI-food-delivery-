@@ -1,4 +1,4 @@
-import { FOOD_ITEMS } from './src/lib/mockData.ts';
+import { FOOD_ITEMS } from './src/lib/mockData';
 
 async function checkUrls() {
   console.log("Checking image URLs...");
