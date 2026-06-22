@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { FOOD_ITEMS } from "@/lib/mockData";
 import { useAppContext } from "@/context/AppContext";
 import { motion } from "framer-motion";
 import { Calendar, Target, Activity } from "lucide-react";
 import styles from "./page.module.css";
 
 export default function MealPlanner() {
-  const { allergyProfile } = useAppContext();
+  const { allergyProfile, foodItems } = useAppContext();
   const [goal, setGoal] = useState("lose");
   const [calories, setCalories] = useState(1500);
   const [plan, setPlan] = useState<any>(null);
@@ -19,8 +18,8 @@ export default function MealPlanner() {
     
     setTimeout(() => {
       // Filter foods to only safe ones
-      const userAllergies = allergyProfile.allergies.map(a => a.toLowerCase());
-      const safeFoods = FOOD_ITEMS.filter(f => !f.ingredients.some(i => userAllergies.includes(i.toLowerCase())));
+      const userAllergies = allergyProfile.allergies.map(a => a.split("(")[0].trim().toLowerCase());
+      const safeFoods = foodItems.filter(f => !f.ingredients.some(i => userAllergies.includes(i.toLowerCase())));
       
       // Separate into healthy/low cal vs high cal
       const lightMeals = safeFoods.filter(f => f.calories < 400);

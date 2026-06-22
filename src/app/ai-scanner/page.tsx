@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FOOD_ITEMS } from "@/lib/mockData";
+import { FoodItem } from "@/lib/mockData";
 import { Search, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -11,8 +11,8 @@ import { useAppContext } from "@/context/AppContext";
 export default function AiScanner() {
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [results, setResults] = useState<typeof FOOD_ITEMS>([]);
-  const { allergyProfile } = useAppContext();
+  const [results, setResults] = useState<FoodItem[]>([]);
+  const { allergyProfile, foodItems } = useAppContext();
 
   const handleSearch = () => {
     if (!query) return;
@@ -21,7 +21,7 @@ export default function AiScanner() {
     // Mock AI NLP logic
     setTimeout(() => {
       const q = query.toLowerCase();
-      let matched = FOOD_ITEMS;
+      let matched = foodItems;
 
       // Simple mock NLP keyword matching
       if (q.includes("dairy-free") || q.includes("no milk")) {
@@ -35,7 +35,7 @@ export default function AiScanner() {
       }
 
       // Automatically apply user's allergy profile to ANY search to guarantee safety
-      const userAllergies = allergyProfile.allergies.map(a => a.toLowerCase());
+      const userAllergies = allergyProfile.allergies.map(a => a.split("(")[0].trim().toLowerCase());
       matched = matched.filter(f => !f.ingredients.some(i => userAllergies.includes(i.toLowerCase())));
 
       setResults(matched);

@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState, useEffect } from "react";
-import { RESTAURANTS, FOOD_ITEMS, FoodItem } from "@/lib/mockData";
+import { FoodItem } from "@/lib/mockData";
 import { useAppContext } from "@/context/AppContext";
 import { ShieldAlert, ShieldCheck, Flame, Star, ShoppingCart, Info } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,13 +10,13 @@ import Link from "next/link";
 
 export default function RestaurantMenu({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const restaurant = RESTAURANTS.find(r => r.id === resolvedParams.id);
-  const menu = FOOD_ITEMS.filter(f => f.restaurantId === resolvedParams.id);
-  const { allergyProfile, addToCart } = useAppContext();
+  const { allergyProfile, addToCart, restaurants, foodItems } = useAppContext();
+  const restaurant = restaurants.find(r => r.id === resolvedParams.id);
+  const menu = foodItems.filter(f => f.restaurantId === resolvedParams.id);
 
   // AI Logic
   const getRiskAnalysis = (food: FoodItem) => {
-    const userAllergies = allergyProfile.allergies.map(a => a.toLowerCase());
+    const userAllergies = allergyProfile.allergies.map(a => a.split("(")[0].trim().toLowerCase());
     const detected = food.ingredients.filter(ing => 
       userAllergies.includes(ing.toLowerCase())
     );

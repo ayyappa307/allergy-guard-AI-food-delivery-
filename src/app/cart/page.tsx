@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import styles from "./page.module.css";
 import { motion } from "framer-motion";
-import { FOOD_ITEMS } from "@/lib/mockData";
+import { recordOrderInDb } from "@/lib/dbActions";
 
 export default function Cart() {
   const { 
@@ -15,7 +15,8 @@ export default function Cart() {
     tipPercentage, setTipPercentage,
     appliedPromo, setAppliedPromo,
     clearCart,
-    currentUserId, registeredUsers
+    currentUserId, registeredUsers,
+    foodItems
   } = useAppContext();
   
   const [checkingOut, setCheckingOut] = useState(false);
@@ -28,6 +29,24 @@ export default function Cart() {
   // Find the logged-in user's saved home address
   const currentUser = registeredUsers.find(u => u.userId === currentUserId);
   const homeAddress = currentUser?.address || "Please login to save address";
+
+  const userAllergiesCleaned = useMemo(() => {
+    return allergyProfile.allergies.map(a => a.split("(")[0].trim().toLowerCase());
+  }, [allergyProfile]);
+
+  const unsafeItemsCount = useMemo(() => {
+    if (userAllergiesCleaned.length === 0) return 0;
+    return cart.reduce((count, item) => {
+      const fullFoodItem = foodItems.find(f => f.id === item.id);
+      if (fullFoodItem) {
+        const isUnsafe = fullFoodItem.ingredients.some(ing => 
+          userAllergiesCleaned.includes(ing.toLowerCase())
+        );
+        if (isUnsafe) return count + 1;
+      }
+      return count;
+    }, 0);
+  }, [cart, userAllergiesCleaned, foodItems]);
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const taxes = subtotal * 0.05;
@@ -49,10 +68,10 @@ export default function Cart() {
     const restaurantIdsInCart = new Set(cart.map(item => item.restaurantId));
     const cartItemIds = new Set(cart.map(item => item.id));
     
-    return FOOD_ITEMS.filter(f => 
+    return foodItems.filter(f => 
       restaurantIdsInCart.has(f.restaurantId) && !cartItemIds.has(f.id)
     ).slice(0, 4); // Show up to 4 recommendations
-  }, [cart]);
+  }, [cart, foodItems]);
 
   const handleApplyPromo = () => {
     if (promoInput.toUpperCase() === "SAVE20") {
@@ -62,8 +81,34 @@ export default function Cart() {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     setCheckingOut(true);
+    try {
+      const restaurantId = cart[0]?.restaurantId || "";
+      const items = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      }));
+
+      await recordOrderInDb({
+        userId: currentUserId || "guest",
+        restaurantId,
+        items,
+        subtotal,
+        discount,
+        taxes,
+        delivery,
+        tip: tipAmount,
+        total,
+        address: addressType === "Other" && customAddress ? customAddress : addressType === "Home" ? homeAddress : "456 Business Blvd",
+        instructions
+      });
+    } catch (error) {
+      console.error("Failed to save order to database:", error);
+    }
+
     setTimeout(() => {
       setCheckingOut(false);
       setOrderPlaced(true);
@@ -144,25 +189,38 @@ export default function Cart() {
             </div>
 
             {/* Cart Items */}
-            {cart.map(item => (
-              <div key={item.id} className={`glass-panel ${styles.cartItem}`}>
-                <div className={styles.itemInfo}>
-                  <h3 className="heading-3">{item.name}</h3>
-                  <span className={styles.price}>₹{item.price}</span>
-                </div>
-                
-                <div className={styles.actions}>
-                  <div className={styles.quantity}>
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+            {cart.map(item => {
+              const fullFoodItem = foodItems.find(f => f.id === item.id);
+              const matchedAllergens = fullFoodItem ? fullFoodItem.ingredients.filter(ing => 
+                userAllergiesCleaned.includes(ing.toLowerCase())
+              ) : [];
+              const isUnsafe = matchedAllergens.length > 0;
+
+              return (
+                <div key={item.id} className={`glass-panel ${styles.cartItem} ${isUnsafe ? styles.unsafeCartItem : ''}`}>
+                  <div className={styles.itemInfo}>
+                    <h3 className="heading-3">{item.name}</h3>
+                    <span className={styles.price}>₹{item.price}</span>
+                    {isUnsafe && (
+                      <div style={{ color: 'var(--danger)', fontSize: '0.85rem', marginTop: '0.5rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <ShieldAlert size={14} /> Unsafe: Contains {matchedAllergens.join(", ")}
+                      </div>
+                    )}
                   </div>
-                  <button onClick={() => removeFromCart(item.id)} className={styles.removeBtn}>
-                    <Trash2 size={20} />
-                  </button>
+                  
+                  <div className={styles.actions}>
+                    <div className={styles.quantity}>
+                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                    </div>
+                    <button onClick={() => removeFromCart(item.id)} className={styles.removeBtn}>
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Delivery Instructions */}
             <div className={styles.sectionBlock} style={{ marginTop: '2rem' }}>
@@ -200,13 +258,21 @@ export default function Cart() {
             )}
 
             {/* Allergy Verification */}
-            <div className={styles.allergyCheck}>
+            <div className={`${styles.allergyCheck} ${unsafeItemsCount > 0 ? styles.allergyCheckUnsafe : ''}`}>
               <div className={styles.allergyHeader}>
-                <ShieldAlert size={24} />
+                <ShieldAlert size={24} color={unsafeItemsCount > 0 ? 'var(--danger)' : 'var(--secondary)'} />
                 <strong>Final AI Allergy Check Before Checkout</strong>
               </div>
               <p>Profile: {allergyProfile.allergies.length > 0 ? allergyProfile.allergies.join(", ") : "No allergies set"}</p>
-              <p>Risk Status: <strong style={{color: 'var(--secondary)'}}>Safe to Proceed</strong> (0 unsafe items in cart)</p>
+              <p>
+                Risk Status:{" "}
+                {unsafeItemsCount > 0 ? (
+                  <strong style={{ color: 'var(--danger)' }}>⚠ Unsafe Items Detected</strong>
+                ) : (
+                  <strong style={{ color: 'var(--secondary)' }}>Safe to Proceed</strong>
+                )}
+                {" "}({unsafeItemsCount} unsafe item{unsafeItemsCount === 1 ? '' : 's'} in cart)
+              </p>
             </div>
           </div>
 
@@ -284,11 +350,12 @@ export default function Cart() {
 
             <button 
               onClick={handleCheckout}
-              disabled={checkingOut}
+              disabled={checkingOut || unsafeItemsCount > 0}
               className={styles.checkoutBtn}
+              style={unsafeItemsCount > 0 ? { background: 'var(--danger)', boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)' } : {}}
             >
               {checkingOut ? "Processing..." : (
-                <>Place Order <ArrowRight size={20} /></>
+                unsafeItemsCount > 0 ? "Remove Unsafe Items to Order" : <>Place Order <ArrowRight size={20} /></>
               )}
             </button>
           </div>

@@ -9,8 +9,9 @@ import styles from "./page.module.css";
 
 const COMMON_ALLERGIES = [
   "Peanuts", "Cashews", "Seafood", 
-  "Prawns", "Dairy", "Eggplant", "Ghee", "Wheat", "Sesame", 
-  "Mustard", "Dust", "Pollen", "Mold", "Smoke", "Curd"
+  "Prawns", "Dairy", "Eggplant", "Ghee", 
+  "Wheat", "Sesame", "Mustard", "Dust", 
+  "Pollen", "Mold", "Smoke"
 ];
 
 export default function Login() {

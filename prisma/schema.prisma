@@ -1,0 +1,68 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  password       String
+  address        String?
+  role           String          @default("customer")
+  createdAt      DateTime        @default(now())
+  allergyProfile AllergyProfile?
+}
+
+model AllergyProfile {
+  id        String   @id @default(uuid())
+  name      String
+  allergies String[]
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Restaurant {
+  id        String     @id
+  name      String
+  rating    Float
+  cuisine   String
+  distance  String
+  image     String
+  foodItems FoodItem[]
+}
+
+model FoodItem {
+  id           String     @id
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  name         String
+  price        Float
+  rating       Float
+  deliveryTime String
+  ingredients  String[]
+  image        String
+  calories     Int
+  protein      String
+  fat          String
+}
+
+model Order {
+  id           String   @id @default(uuid())
+  userId       String
+  restaurantId String
+  items        Json
+  subtotal     Float
+  discount     Float
+  taxes        Float
+  delivery     Float
+  tip          Float
+  total        Float
+  address      String
+  instructions String?
+  createdAt    DateTime @default(now())
+}

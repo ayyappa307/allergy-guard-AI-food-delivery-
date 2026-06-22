@@ -1,26 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { RESTAURANTS, FOOD_ITEMS } from "@/lib/mockData";
+import { useAppContext } from "@/context/AppContext";
 import Link from "next/link";
 import { Star, MapPin } from "lucide-react";
 import styles from "./page.module.css";
 import { useState } from "react";
 
 export default function Restaurants() {
+  const { restaurants, foodItems } = useAppContext();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
-  const cuisines = ["All", ...Array.from(new Set(RESTAURANTS.map(r => r.cuisine)))];
+  const cuisines = ["All", ...Array.from(new Set(restaurants.map(r => r.cuisine)))];
 
-  const filteredRestaurants = RESTAURANTS.filter(r => {
+  const filteredRestaurants = restaurants.filter(r => {
     const matchesSearch = r.name.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "All" || r.cuisine === filter;
     return matchesSearch && matchesFilter;
   });
 
   const filteredFoods = search.trim() !== "" 
-    ? FOOD_ITEMS.filter(f => f.name.toLowerCase().includes(search.toLowerCase()))
+    ? foodItems.filter(f => f.name.toLowerCase().includes(search.toLowerCase()))
     : [];
 
   return (
@@ -58,7 +59,7 @@ export default function Restaurants() {
           <h2 className="heading-3" style={{ marginBottom: "1.5rem" }}>Dishes matching "{search}"</h2>
           <div className={styles.grid}>
             {filteredFoods.map((food, index) => {
-              const restaurant = RESTAURANTS.find(r => r.id === food.restaurantId);
+              const restaurant = restaurants.find(r => r.id === food.restaurantId);
               return (
                 <Link href={`/restaurants/${food.restaurantId}`} key={food.id}>
                   <motion.div 

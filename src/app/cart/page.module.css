@@ -426,3 +426,13 @@
     grid-template-columns: 2fr 1fr;
   }
 }
+
+.unsafeCartItem {
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.02)) !important;
+}
+
+.allergyCheckUnsafe {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.05) !important;
+}
