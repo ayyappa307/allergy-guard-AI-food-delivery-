@@ -5,7 +5,7 @@ import { RESTAURANTS, FOOD_ITEMS } from "./mockData";
 
 // Helper to check if DB is configured
 const isDbConfigured = () => {
-  return !!process.env.DATABASE_URL;
+  return !!process.env.DATABASE_URL || !!process.env.POSTGRES_PRISMA_URL;
 };
 
 // 1. Get Restaurants
