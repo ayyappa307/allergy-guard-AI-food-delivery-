@@ -45,7 +45,7 @@ export default function Login() {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoginError("");
 
     if (selectedRole === "admin") {
@@ -84,7 +84,12 @@ export default function Login() {
           setLoginError("Please enter a delivery address.");
           return;
         }
-        registerUser({ userId, password, address: userAddress });
+        setLoginError("");
+        const res = await registerUser({ userId, password, address: userAddress });
+        if (res && !res.success) {
+          setLoginError(res.error || "Failed to register user in database.");
+          return;
+        }
         setUserRole(selectedRole);
         setCurrentUserId(userId);
         setAllergyProfile({ name: userId, allergies: selectedAllergies });

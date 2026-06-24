@@ -178,14 +178,14 @@ export async function getRegisteredUsersFromDb() {
     return [];
   }
   try {
-    const users = await prisma.user.findMany({
-      where: { role: "customer" }
-    });
-    return users.map(u => ({
-      userId: u.userId,
-      password: u.password,
-      address: u.address || ""
-    }));
+    const users = await prisma.user.findMany();
+    return users
+      .filter(u => u.role.trim() === "customer")
+      .map(u => ({
+        userId: u.userId,
+        password: u.password,
+        address: u.address || ""
+      }));
   } catch (error) {
     console.error("Error reading users:", error);
     return [];

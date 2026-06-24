@@ -38,7 +38,7 @@ interface AppContextType {
   currentUserId: string;
   setCurrentUserId: React.Dispatch<React.SetStateAction<string>>;
   registeredUsers: RegisteredUser[];
-  registerUser: (user: RegisteredUser) => void;
+  registerUser: (user: RegisteredUser) => Promise<{ success: boolean; error?: string }>;
   allergyProfile: AllergyProfile;
   setAllergyProfile: (profile: AllergyProfile | ((prev: AllergyProfile) => AllergyProfile)) => void;
   cart: CartItem[];
@@ -114,9 +114,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const res = await registerUserInDb(user.userId, user.password, user.address);
       if (res.success) {
         setRegisteredUsers(prev => [...prev, user]);
+        return { success: true };
       }
+      return { success: false, error: res.error };
     } catch (err) {
       console.error("Registration error:", err);
+      return { success: false, error: "Registration failed. Database error." };
     }
   };
 
