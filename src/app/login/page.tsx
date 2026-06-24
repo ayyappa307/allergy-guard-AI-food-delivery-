@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext, UserRole } from "@/context/AppContext";
 import { motion } from "framer-motion";
@@ -30,6 +30,17 @@ export default function Login() {
   const [loginError, setLoginError] = useState("");
 
   const router = useRouter();
+
+  // Automatically redirect logged-in users away from the login page
+  useEffect(() => {
+    if (userRole === "admin") {
+      router.push("/admin");
+    } else if (userRole === "customer") {
+      router.push("/restaurants");
+    } else if (userRole === "restaurant") {
+      router.push("/restaurant-panel");
+    }
+  }, [userRole, router]);
 
   const toggleAllergy = (allergy: string) => {
     setSelectedAllergies(prev => 
