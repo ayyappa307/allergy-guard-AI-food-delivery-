@@ -64,6 +64,37 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>([{ userId: "user", password: "user123", address: "123 Main Street, Apt 4B" }]);
   const [allergyProfile, setAllergyProfile] = useState<AllergyProfile>({ name: "", allergies: [] });
   const [cart, setCart] = useState<CartItem[]>([]);
+  const loadedUserIdRef = React.useRef<string | null>(null);
+
+  // Load user-specific cart from localStorage on mount and when currentUserId changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const key = currentUserId ? `cart_${currentUserId}` : "cart_guest";
+      const savedCart = localStorage.getItem(key);
+      if (savedCart) {
+        try {
+          setCart(JSON.parse(savedCart));
+        } catch (e) {
+          console.error("Failed to parse saved cart:", e);
+          setCart([]);
+        }
+      } else {
+        setCart([]);
+      }
+      loadedUserIdRef.current = currentUserId;
+    }
+  }, [currentUserId]);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (loadedUserIdRef.current === currentUserId) {
+        const key = currentUserId ? `cart_${currentUserId}` : "cart_guest";
+        localStorage.setItem(key, JSON.stringify(cart));
+      }
+    }
+  }, [cart, currentUserId]);
+
   const [deliveryAddress, setDeliveryAddress] = useState<string>("Home");
   const [tipPercentage, setTipPercentage] = useState<number>(0);
   const [appliedPromo, setAppliedPromo] = useState<string>("");

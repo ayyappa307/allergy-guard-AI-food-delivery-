@@ -52,7 +52,6 @@ export default function Login() {
       if (userId === "chaitanya296" && password === "chaitanya24296") {
         setUserRole(selectedRole);
         setCurrentUserId("chaitanya296");
-        clearCart();
         router.push("/admin");
       } else {
         setLoginError("Invalid Admin credentials.");
@@ -67,7 +66,6 @@ export default function Login() {
           setCurrentUserId(userId);
           // In real app we'd load allergies from DB, here we just set them from what they picked or empty
           setAllergyProfile({ name: userId, allergies: selectedAllergies });
-          clearCart();
           router.push("/restaurants");
         } else {
           setLoginError("Invalid Customer credentials. User not found.");
@@ -93,14 +91,12 @@ export default function Login() {
         setUserRole(selectedRole);
         setCurrentUserId(userId);
         setAllergyProfile({ name: userId, allergies: selectedAllergies });
-        clearCart();
         router.push("/restaurants");
       }
     } else if (selectedRole === "restaurant") {
       if (userId === "owner" && password === "owner123") {
         setUserRole(selectedRole);
         setCurrentUserId("owner");
-        clearCart();
         router.push("/restaurant-panel");
       } else {
         setLoginError("Invalid Restaurant credentials. (Try owner / owner123)");
@@ -132,7 +128,6 @@ export default function Login() {
               onClick={() => {
                 setUserRole("guest");
                 setCurrentUserId("");
-                clearCart();
                 router.push("/");
               }} 
               className={styles.saveBtn}
